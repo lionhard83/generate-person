@@ -1,5 +1,5 @@
 {
-  "name": "npmtest",
+  "name": "npm-simple-test",
   "version": "1.0.0",
   "description": "\"A simple Npm on Ts\"",
   "main": "index.js",
