@@ -38,5 +38,13 @@
   "dependencies": {
     "@types/moment": "^2.13.0",
     "ts-gaussian": "^1.1.11"
-  }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/lionhard83/generate-person.git"
+  },
+  "bugs": {
+    "url": "https://github.com/lionhard83/generate-person/issues"
+  },
+  "homepage": "https://github.com/lionhard83/generate-person#readme"
 }
