@@ -1,6 +1,6 @@
-import * as repo from './repo.json';
-import * as moment from 'moment';
 import { Gaussian } from 'ts-gaussian';
+import * as moment from 'moment';
+import * as repo from './repo.json';
 
 export enum Nationality {
     Albania = 0,
@@ -64,54 +64,52 @@ export enum Nationality {
     Vietnam = 58,
 }
 
-export interface BirthdayOptions {
+export interface IBirthdayOptions {
     near: string;
     variance: number;
 }
 
-export interface Options {
+export interface IOptions {
+    birthdayOptions?: IBirthdayOptions
     nationality?: Nationality;
     sex?: 'male' | 'female';
-    birthdayOptions?: BirthdayOptions
 }
 
-export interface Person {
-    nationality?: string;
-    sex?: 'male' | 'female';
-    name: string;
-    surname: string;
+export interface IPerson {
     age?: number,
     birthday?: string
+    name: string;
+    nationality?: string;
+    sex?: 'male' | 'female';    
+    surname: string;
 }
 
-export interface Namespace {
-    male: string[],
+export interface INamespace {
     female: string[],
+    male: string[],
     surnames: string[],
 }
 
-export const Person = (options?: Options): Person => {
+export const Person = (options?: IOptions): IPerson => {
     const namespace = repo[options && options.nationality || Math.floor(Math.random() * Object.keys(Nationality).length / 2)];
     const sex = options && options.sex ? options.sex : Math.random() > 0.5 ? 'male' : 'female';
-    let date = undefined;
+    let date;
     if (options && options.birthdayOptions) {
         date = generateAge(options.birthdayOptions.near, options.birthdayOptions.variance)
     } else {
         date = generateAge('01/01/1997', 500000);
     }
-    
-    let person = {
-        name: namespace[sex][Math.floor(Math.random() * namespace[sex].length)],
-        surname: namespace.surnames[Math.floor(Math.random() * namespace.surnames.length)],
-        nationality: namespace.region,
-        birthday: date,
+    return {
         age: moment().diff(date, 'years'),
-        sex
-    } 
-    return person;
+        birthday: date,
+        name: namespace[sex][Math.floor(Math.random() * namespace[sex].length)],
+        nationality: namespace.region,
+        sex,
+        surname: namespace.surnames[Math.floor(Math.random() * namespace.surnames.length)],
+    }
 }
 
-const generateAge = function(near: string, variance: number) {
+const generateAge = (near: string, variance: number) => {
     const mean = moment().diff(moment(near), 'days');
     const distribution = new Gaussian(mean, variance);
     const days = distribution.ppf(Math.random());
