@@ -6,7 +6,6 @@ test('Person', () => {
     expect(Person({birthdayOptions: {
         near: '01/01/1980',
         variance: 500000
-    }})).toHaveProperty('age');
-    expect(Person({})).toHaveProperty('birthday');
+    }})).toHaveProperty('birthday');
     expect(Person({})).toHaveProperty('sex');
 });

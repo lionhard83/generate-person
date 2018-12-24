@@ -1,5 +1,5 @@
-import { Gaussian } from 'ts-gaussian';
 import * as moment from 'moment';
+import { Gaussian } from 'ts-gaussian';
 import * as repo from './repo.json';
 
 export enum Nationality {
@@ -100,7 +100,6 @@ export const Person = (options?: IOptions): IPerson => {
         date = generateAge('01/01/1997', 500000);
     }
     return {
-        age: moment().diff(date, 'years'),
         birthday: date,
         name: namespace[sex][Math.floor(Math.random() * namespace[sex].length)],
         nationality: namespace.region,
@@ -110,7 +109,7 @@ export const Person = (options?: IOptions): IPerson => {
 }
 
 const generateAge = (near: string, variance: number) => {
-    const mean = moment().diff(moment(near), 'days');
+    const mean = moment().diff(moment(near, 'MM/DD/YYYY'), 'days');
     const distribution = new Gaussian(mean, variance);
     const days = distribution.ppf(Math.random());
     return moment().subtract(days, 'days').format('l');
