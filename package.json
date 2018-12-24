@@ -1,5 +1,5 @@
 {
-  "name": "npm-simple-test",
+  "name": "generate-person",
   "version": "1.0.0",
   "description": "\"A simple Npm on Ts\"",
   "main": "index.js",
@@ -15,9 +15,12 @@
     "postversion": "git push && git push --tags"
   },
   "keywords": [
-    "Test",
-    "Npm",
-    "Ts"
+    "generate",
+    "person",
+    "by",
+    "nationality",
+    "age",
+    "sex"
   ],
   "author": "Carlo Leonardi <carloleonardi83@gmail.com>",
   "license": "MIT",
@@ -33,13 +36,8 @@
   "directories": {
     "lib": "lib"
   },
-  "dependencies": {},
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/lionhard83/npmTS.git"
-  },
-  "bugs": {
-    "url": "https://github.com/lionhard83/npmTS/issues"
-  },
-  "homepage": "https://github.com/lionhard83/npmTS#readme"
+  "dependencies": {
+    "@types/moment": "^2.13.0",
+    "ts-gaussian": "^1.1.11"
+  }
 }
