@@ -13,14 +13,12 @@ const p1 = Person();
       surname: 'Julien',
       nationality: 'France',
       birthday: '10/9/1994',
-      age: 24,
       sex: 'male' }*/
 const p2 = Person({nationality: Nationality.Germany, sex: 'male'});
 /* { name: 'John',
       surname: 'Baumann',
       nationality: 'Germany',
       birthday: '2/27/1999',
-      age: 19,
       sex: 'male' } */
 const p3 = Person({birthdayOptions: {
         near: '01/01/1980',
@@ -31,6 +29,5 @@ const p3 = Person({birthdayOptions: {
       surname: 'Մովսեսյան',
       nationality: 'Armenia',
       birthday: '9/14/1980',
-      age: 38,
       sex: 'female' }*/
 ```
