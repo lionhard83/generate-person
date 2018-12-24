@@ -1,8 +1,8 @@
 {
   "name": "generate-person",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "description": "\"A simple Npm on Ts\"",
-  "main": "index.js",
+  "main": "lib/index.js",
   "scripts": {
     "test": "jest --config jestconfig.json",
     "build": "tsc",
@@ -37,6 +37,7 @@
   },
   "dependencies": {
     "@types/moment": "^2.13.0",
+    "moment": "^2.23.0",
     "ts-gaussian": "^1.1.11"
   },
   "repository": {
