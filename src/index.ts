@@ -1,6 +1,12 @@
 import * as moment from 'moment';
 import { Gaussian } from 'ts-gaussian';
 import * as repo from './repo.json';
+const DEAFULT_DATE_MEAN = '01/01/1992';
+const DEAFULT_DATE_VARIANCE = 10; // years
+const DEAFULT_HEIGHT_MEAN_MALE = 182;
+const DEAFULT_HEIGHT_MEAN_FEMALE = 167;
+const DEAFULT_HEIGHT_VARIANCE = 50;
+const DEAFULT_WEIGHT_VARIANCE = 70;
 
 export enum Nationality {
     Albania = 0,
@@ -69,10 +75,27 @@ export interface IBirthdayOptions {
     variance: number;
 }
 
+export enum Sex {
+    Male = 0,
+    Female = 1,
+}
+
+export interface IHeightOptions {
+    near: number;
+    variance: number;
+}
+
+export interface IWeightOptions {
+    near: number;
+    variance: number;
+}
+
 export interface IOptions {
-    birthdayOptions?: IBirthdayOptions
+    birthdayOptions?: IBirthdayOptions;
+    heightOptions?: IHeightOptions;
     nationality?: Nationality;
     sex?: 'male' | 'female';
+    weightOptions?: IWeightOptions
 }
 
 export interface IPerson {
@@ -82,6 +105,8 @@ export interface IPerson {
     nationality?: string;
     sex?: 'male' | 'female';    
     surname: string;
+    height: number;
+    weight: number;
 }
 
 export interface INamespace {
@@ -94,23 +119,46 @@ export const Person = (options?: IOptions): IPerson => {
     const namespace = repo[options && options.nationality || Math.floor(Math.random() * Object.keys(Nationality).length / 2)];
     const sex = options && options.sex ? options.sex : Math.random() > 0.5 ? 'male' : 'female';
     let date;
+    let height;
+    let weight;
     if (options && options.birthdayOptions) {
-        date = generateAge(options.birthdayOptions.near, options.birthdayOptions.variance)
+        date = generateAge(options.birthdayOptions.near, options.birthdayOptions.variance);
     } else {
-        date = generateAge('01/01/1997', 500000);
+        date = generateAge(DEAFULT_DATE_MEAN, DEAFULT_DATE_VARIANCE);
+    }
+    if (options && options.heightOptions) {
+        height = generateHeight(options.heightOptions.near, options.heightOptions.variance);
+    } else {
+        height = generateHeight(sex === 'male' ? DEAFULT_HEIGHT_MEAN_MALE: DEAFULT_HEIGHT_MEAN_FEMALE, DEAFULT_HEIGHT_VARIANCE);
+    }
+    if (options && options.weightOptions) {
+        weight = generateWeight(options.weightOptions.near, options.weightOptions.variance);
+    } else {
+        weight = generateHeight(height - 100, DEAFULT_WEIGHT_VARIANCE);
     }
     return {
         birthday: date,
+        height,
         name: namespace[sex][Math.floor(Math.random() * namespace[sex].length)],
         nationality: namespace.region,
         sex,
         surname: namespace.surnames[Math.floor(Math.random() * namespace.surnames.length)],
+        weight
     }
 }
 
 const generateAge = (near: string, variance: number) => {
-    const mean = moment().diff(moment(near, 'MM/DD/YYYY'), 'days');
-    const distribution = new Gaussian(mean, variance);
-    const days = distribution.ppf(Math.random());
+    const mean = Math.round(moment().diff(moment(near, 'MM/DD/YYYY'), 'days'));
+    const distribution = new Gaussian(mean, variance * 100000);
+    const days = Math.round(distribution.ppf(Math.random()));
     return moment().subtract(days, 'days').format('l');
+}
+const generateHeight = (near: number, variance: number): number => {
+    const distribution = new Gaussian(near, variance);
+    return Math.round(distribution.ppf(Math.random()));
+}
+
+const generateWeight = (near: number, variance: number): number => {
+    const distribution = new Gaussian(near, variance);
+    return Math.round(distribution.ppf(Math.random()));
 }

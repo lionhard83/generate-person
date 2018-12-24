@@ -1,6 +1,6 @@
 {
   "name": "generate-person",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "\"A simple Npm on Ts\"",
   "main": "index.js",
   "scripts": {

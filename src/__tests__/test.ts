@@ -8,4 +8,6 @@ test('Person', () => {
         variance: 500000
     }})).toHaveProperty('birthday');
     expect(Person({})).toHaveProperty('sex');
+    expect(Person({})).toHaveProperty('heigth');
+    expect(Person({})).toHaveProperty('weigth');
 });
