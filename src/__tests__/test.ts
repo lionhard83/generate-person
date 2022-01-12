@@ -1,15 +1,17 @@
 import { Nationality, Person } from '../index';
 
 test('Person', () => {
-    // expect(Person()).toHaveProperty('name');
-    // expect(Person({nationality: Nationality.Germany})).toHaveProperty('surname');
-    // expect(Person({birthdayOptions: {
-    //     near: '01/01/1980',
-    //     variance: 500000
-    // }})).toHaveProperty('birthday');
-    // expect(Person({})).toHaveProperty('sex');
-    // expect(Person({})).toHaveProperty('height');
-    // expect(Person({})).toHaveProperty('weight');
+    const person = Person({
+        birthdayOptions: {
+            near: '01/01/1980',
+            variance: 500000
+        },
+        nationality: Nationality.Germany
+    })
+    expect(person).toHaveProperty('name');
+    expect(person).toHaveProperty('surname');
+    expect(person).toHaveProperty('birthday');
+    expect(person).toHaveProperty('sex');
+    expect(person).toHaveProperty('height');
+    expect(person).toHaveProperty('weight');
 });
-
-console.log(Person({nationality: Nationality.Armenia}));

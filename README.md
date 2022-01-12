@@ -39,5 +39,10 @@ const p3 = Person({birthdayOptions: {
       nationality: 'Armenia',
       birthday: '1980/10/08',
       sex: 'female',
+      email: 'test.test@generateperson.com',
       weight: 67 }*/
+
+
+const people = People(10, {nationality: Nationality.Germany});
+/* generate people by number */
 ```

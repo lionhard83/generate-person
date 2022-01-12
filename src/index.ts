@@ -8,7 +8,7 @@ const DEAFULT_DATE_VARIANCE = 10; // years
 const DEAFULT_HEIGHT_MEAN_MALE = 182;
 const DEAFULT_HEIGHT_MEAN_FEMALE = 167;
 const DEAFULT_HEIGHT_VARIANCE = 50;
-const DEAFULT_WEIGHT_VARIANCE = 70;
+const DEAFULT_WEIGHT_VARIANCE = 65;
 
 export enum Nationality {
     Albania = 0,
@@ -139,16 +139,19 @@ export const Person = (options?: IOptions): IPerson => {
         generateHeight(height - 100, DEAFULT_WEIGHT_VARIANCE);
 
     return {
+        name,
+        surname,
+        email,
+        sex,
+        nationality: namespace.region,
         birthday: date,
         height,
-        name,
-        nationality: namespace.region,
-        sex,
-        surname,
         weight,
-        email
     }
 }
+
+export const People = (amount: number, options?: IOptions) => 
+    Array(amount).fill(null).map(_ => Person(options))
 
 const generateAge = ({near, variance, format}: Required<IBirthdayOptions>) => {
     const mean = Math.round(dayjs().diff(dayjs(near, format), 'days'));
