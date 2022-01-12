@@ -1,7 +1,7 @@
 {
   "name": "generate-person",
-  "version": "1.0.7",
-  "description": "\"A simple Npm on Ts\"",
+  "version": "1.0.8",
+  "description": "\"A simple Npm to generate people\"",
   "main": "dist/index.js",
   "scripts": {
     "test": "jest --config jestconfig.json",
