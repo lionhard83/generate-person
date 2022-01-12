@@ -1,7 +1,9 @@
-import * as moment from 'moment';
 import { Gaussian } from 'ts-gaussian';
+import dayjs from 'dayjs';
+import latinize from 'latinize';
 import * as repo from './repo.json';
 const DEAFULT_DATE_MEAN = '01/01/1992';
+const DEAFULT_DATE_FORMAT = 'MM/DD/YYYY';
 const DEAFULT_DATE_VARIANCE = 10; // years
 const DEAFULT_HEIGHT_MEAN_MALE = 182;
 const DEAFULT_HEIGHT_MEAN_FEMALE = 167;
@@ -71,8 +73,9 @@ export enum Nationality {
 }
 
 export interface IBirthdayOptions {
-    near: string;
-    variance: number;
+    near?: string;
+    variance?: number;
+    format?: string;
 }
 
 export enum Sex {
@@ -107,6 +110,7 @@ export interface IPerson {
     surname: string;
     height: number;
     weight: number;
+    email: string;
 }
 
 export interface INamespace {
@@ -118,40 +122,39 @@ export interface INamespace {
 export const Person = (options?: IOptions): IPerson => {
     const namespace = repo[options && options.nationality || Math.floor(Math.random() * Object.keys(Nationality).length / 2)];
     const sex = options && options.sex ? options.sex : Math.random() > 0.5 ? 'male' : 'female';
-    let date;
-    let height;
-    let weight;
-    if (options && options.birthdayOptions) {
-        date = generateAge(options.birthdayOptions.near, options.birthdayOptions.variance);
-    } else {
-        date = generateAge(DEAFULT_DATE_MEAN, DEAFULT_DATE_VARIANCE);
-    }
-    if (options && options.heightOptions) {
-        height = generateHeight(options.heightOptions.near, options.heightOptions.variance);
-    } else {
-        height = generateHeight(sex === 'male' ? DEAFULT_HEIGHT_MEAN_MALE: DEAFULT_HEIGHT_MEAN_FEMALE, DEAFULT_HEIGHT_VARIANCE);
-    }
-    if (options && options.weightOptions) {
-        weight = generateWeight(options.weightOptions.near, options.weightOptions.variance);
-    } else {
-        weight = generateHeight(height - 100, DEAFULT_WEIGHT_VARIANCE);
-    }
+    const name = namespace[sex][Math.floor(Math.random() * namespace[sex].length)];
+    const surname = namespace.surnames[Math.floor(Math.random() * namespace.surnames.length)];
+    const email = `${convertString(latinize(name))}.${convertString(latinize(surname))}@generateperson.com`;
+    let date = generateAge({   
+        near: DEAFULT_DATE_MEAN, 
+        variance: DEAFULT_DATE_VARIANCE, 
+        format: DEAFULT_DATE_FORMAT,
+        ...options?.birthdayOptions
+    });
+    let height = (options && options.heightOptions) ?
+        generateHeight(options.heightOptions.near, options.heightOptions.variance) :
+        generateHeight(sex === 'male' ? DEAFULT_HEIGHT_MEAN_MALE: DEAFULT_HEIGHT_MEAN_FEMALE, DEAFULT_HEIGHT_VARIANCE)
+    let weight = (options && options.weightOptions) ?
+        generateWeight(options.weightOptions.near, options.weightOptions.variance) :
+        generateHeight(height - 100, DEAFULT_WEIGHT_VARIANCE);
+
     return {
         birthday: date,
         height,
-        name: namespace[sex][Math.floor(Math.random() * namespace[sex].length)],
+        name,
         nationality: namespace.region,
         sex,
-        surname: namespace.surnames[Math.floor(Math.random() * namespace.surnames.length)],
-        weight
+        surname,
+        weight,
+        email
     }
 }
 
-const generateAge = (near: string, variance: number) => {
-    const mean = Math.round(moment().diff(moment(near, 'MM/DD/YYYY'), 'days'));
+const generateAge = ({near, variance, format}: Required<IBirthdayOptions>) => {
+    const mean = Math.round(dayjs().diff(dayjs(near, format), 'days'));
     const distribution = new Gaussian(mean, variance * 100000);
     const days = Math.round(distribution.ppf(Math.random()));
-    return moment().subtract(days, 'days').format('l');
+    return dayjs().subtract(days, 'days').format(format);
 }
 const generateHeight = (near: number, variance: number): number => {
     const distribution = new Gaussian(near, variance);
@@ -161,4 +164,33 @@ const generateHeight = (near: number, variance: number): number => {
 const generateWeight = (near: number, variance: number): number => {
     const distribution = new Gaussian(near, variance);
     return Math.round(distribution.ppf(Math.random()));
+}
+
+const convertString = (phrase: string) => {
+    let maxLength = 100;
+
+    let returnString = phrase.toLowerCase();
+    //Convert Characters
+    returnString = returnString.replace(/\s/g, '');
+    returnString = returnString.replace(/ö/g, 'o');
+    returnString = returnString.replace(/ç/g, 'c');
+    returnString = returnString.replace(/ş/g, 's');
+    returnString = returnString.replace(/ı/g, 'i');
+    returnString = returnString.replace(/ğ/g, 'g');
+    returnString = returnString.replace(/ü/g, 'u');  
+
+    // if there are other invalid chars, convert them into blank spaces
+    returnString = returnString.replace(/[^a-z0-9\s-]/g, "");
+    // convert multiple spaces and hyphens into one space       
+    returnString = returnString.replace(/[\s-]+/g, " ");
+    // // trims current string
+    returnString = returnString.replace(/^\s+|\s+$/g,"");
+    // cuts string (if too long)
+    if(returnString.length > maxLength)
+        returnString = returnString.substring(0, maxLength);
+    if (returnString.length === 0) {
+        return 'mail'
+    }
+
+    return returnString;
 }

@@ -1,5 +1,7 @@
 # generate-person
+
 ## to install
+
 ```
 npm install generate-person
 ```
@@ -8,13 +10,14 @@ npm install generate-person
 
 ```typescript
 import { Nationality, Person } from 'generate-person';
-const p1 = Person(); 
+const p1 = Person();
 /*  { name: 'Jérémy',
       surname: 'Julien',
       height: 195,
       nationality: 'France',
       birthday: '10/9/1994',
       sex: 'male',
+      email: 'jeremy.julien@generateperson.com',
       weight: 109 }*/
 const p2 = Person({nationality: Nationality.Germany, sex: 'male'});
 /* { name: 'John',
@@ -22,17 +25,19 @@ const p2 = Person({nationality: Nationality.Germany, sex: 'male'});
       height: 185,
       nationality: 'Germany',
       birthday: '2/27/1999',
+      email: 'john.baumann@generateperson.com',
       sex: 'male',
       weight: 88 } */
 const p3 = Person({birthdayOptions: {
-        near: '01/01/1980',
-        variance: 5 // years
+        near: '1980-MM-DD',
+        variance: 5, // years
+        format: 'YYYY-MM-DD' //dayjs format
     }}
 /*{ name: 'Սոնա',
       surname: 'Մովսեսյան',
       height: 177,
       nationality: 'Armenia',
-      birthday: '9/14/1980',
+      birthday: '1980/10/08',
       sex: 'female',
       weight: 67 }*/
 ```
